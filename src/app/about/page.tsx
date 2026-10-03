@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { CtaBand, Heading, PageHero, Section } from "@/components/ui";
 import { HUB_POINTS } from "@/lib/content";
 
@@ -41,6 +42,19 @@ export default function About() {
           title="Two Nations. One Seamless Supply Chain."
           text="To give our partners unparalleled access to the world's fastest-growing manufacturing hub, we are actively expanding our corporate footprint with a dedicated procurement and operations headquarters in Malaysia. By bridging the Maldives and the ASEAN region, we operate as a direct conduit between Southeast Asia's most capable manufacturers and the Maldives' most demanding buyers."
         />
+        <div className="relative mb-14 aspect-[16/9] overflow-hidden md:aspect-[21/9]">
+          <Image
+            src="/photos/malaysia.jpg"
+            alt="Kuala Lumpur skyline at dusk"
+            fill
+            sizes="(min-width: 1280px) 1216px, 100vw"
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-transparent to-transparent" />
+          <p className="absolute bottom-5 left-6 text-xs uppercase tracking-[0.3em] text-white">
+            Kuala Lumpur · Procurement Hub
+          </p>
+        </div>
         <h3 className="mb-8 text-sm uppercase tracking-[0.25em] text-charcoal">
           What Our Malaysian Hub Means for You
         </h3>
