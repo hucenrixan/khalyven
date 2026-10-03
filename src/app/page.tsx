@@ -1,5 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import { LogoMark } from "@/components/Logo";
 import { Button, CtaBand, Heading, Section } from "@/components/ui";
 import { ADVANTAGES, CLIENTS, DIVISIONS, PROCESS } from "@/lib/content";
 
@@ -7,8 +7,17 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="dark-surface pattern-grid relative overflow-hidden px-6 py-28 md:py-40">
-        <LogoMark className="pointer-events-none absolute -right-24 top-1/2 hidden h-[34rem] w-[34rem] -translate-y-1/2 opacity-[0.07] lg:block" />
+      <section className="relative overflow-hidden bg-charcoal px-6 py-32 md:py-48">
+        <Image
+          src="/photos/hero.jpg"
+          alt="Aerial view of overwater villas in the Maldives"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-charcoal/90 via-charcoal/65 to-charcoal/20" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-charcoal/60 to-transparent" />
         <div className="relative mx-auto max-w-7xl">
           <p className="mb-6 text-xs uppercase tracking-[0.35em] text-silver">
             Strategic Procurement · Maldives × ASEAN
@@ -86,11 +95,25 @@ export default function Home() {
 
       {/* Why us */}
       <Section>
-        <Heading
-          eyebrow="The Khalyven Advantage"
-          title="A Transnational Footprint"
-          text="With foundational roots in the Maldives and a dynamic operational expansion into Malaysia, we hold a rare dual-market advantage: we audit manufacturers, enforce strict quality control and negotiate exclusive pricing at the source, passing that value, speed and reliability on to our Maldivian clientele."
-        />
+        <div className="mb-14 grid gap-12 md:grid-cols-2 md:items-center">
+          <div className="[&>div]:mb-0">
+            <Heading
+              eyebrow="The Khalyven Advantage"
+              title="A Transnational Footprint"
+              text="With foundational roots in the Maldives and a dynamic operational expansion into Malaysia, we hold a rare dual-market advantage: we audit manufacturers, enforce strict quality control and negotiate exclusive pricing at the source, passing that value, speed and reliability on to our Maldivian clientele."
+            />
+          </div>
+          <div className="relative aspect-[4/3] overflow-hidden">
+            <Image
+              src="/photos/source.jpg"
+              alt="Container terminal with cranes and stacked shipping containers"
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover grayscale"
+            />
+            <div className="absolute inset-0 bg-charcoal/25" />
+          </div>
+        </div>
         <div className="grid gap-10 md:grid-cols-3">
           {ADVANTAGES.map((a) => (
             <div key={a.title} className="border-t border-charcoal pt-8">
