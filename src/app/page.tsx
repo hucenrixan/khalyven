@@ -1,69 +1,141 @@
-import Image from "next/image";
+import Link from "next/link";
+import { LogoMark } from "@/components/Logo";
+import { Button, CtaBand, Heading, Section } from "@/components/ui";
+import { ADVANTAGES, CLIENTS, DIVISIONS, PROCESS } from "@/lib/content";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      {/* Hero */}
+      <section className="dark-surface pattern-grid relative overflow-hidden px-6 py-28 md:py-40">
+        <LogoMark className="pointer-events-none absolute -right-24 top-1/2 hidden h-[34rem] w-[34rem] -translate-y-1/2 opacity-[0.07] lg:block" />
+        <div className="relative mx-auto max-w-7xl">
+          <p className="mb-6 text-xs uppercase tracking-[0.35em] text-silver">
+            Strategic Procurement · Maldives × ASEAN
           </p>
+          <h1 className="font-display max-w-4xl text-6xl font-medium leading-[1.02] md:text-8xl">
+            <span className="silver-text">Elevating the Maldivian Standard.</span>
+          </h1>
+          <span className="rule mt-10" />
+          <p className="mt-10 max-w-2xl text-lg leading-relaxed text-silver md:text-xl">
+            The premier strategic procurement and supply partner bridging Malaysia and other ASEAN
+            manufacturing excellence with the Maldives&apos; most discerning resorts, developers and
+            commercial enterprises.
+          </p>
+          <div className="mt-12 flex flex-wrap gap-4">
+            <Button href="/contact" variant="outline-light">Partner With Us</Button>
+            <Button href="/divisions" variant="outline-light">Explore Our Divisions</Button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Intro */}
+      <Section>
+        <div className="grid gap-14 md:grid-cols-2 md:items-center">
+          <Heading eyebrow="Who We Are" title="Redefining Seamless Procurement" />
+          <div className="space-y-6 text-lg leading-relaxed text-muted">
+            <p>
+              Operating at the intersection of quality, scale and exclusivity, Khalyven International
+              is a distinguished supply enterprise registered in the Maldives, with a strategic
+              procurement hub in Malaysia. We bypass traditional supply-chain friction to deliver
+              world-class products directly from the heart of Southeast Asia to the shores of the
+              Indian Ocean.
+            </p>
+            <p>
+              Whether outfitting a newly developed private island, sourcing premium gastronomy or
+              upgrading commercial infrastructure, we provide a frictionless, end-to-end procurement
+              experience tailored for the luxury and commercial sectors.
+            </p>
+          </div>
         </div>
-      </main>
-    </div>
+      </Section>
+
+      {/* Divisions */}
+      <Section className="bg-mist">
+        <Heading
+          eyebrow="Areas of Expertise"
+          title="Our Divisions"
+          text="Five specialist divisions, one accountable partner."
+        />
+        <div className="grid gap-px bg-silver md:grid-cols-2 lg:grid-cols-3">
+          {DIVISIONS.map((d) => (
+            <Link
+              key={d.slug}
+              href={`/divisions#${d.slug}`}
+              className="group bg-background p-10 transition-colors hover:bg-charcoal"
+            >
+              <d.icon size={34} stroke={1.2} className="text-steel group-hover:text-silver" />
+              <h3 className="font-display mt-8 text-2xl font-semibold text-charcoal group-hover:text-white">
+                {d.title}
+              </h3>
+              <p className="mt-4 leading-relaxed text-muted group-hover:text-silver">{d.summary}</p>
+            </Link>
+          ))}
+          <div className="flex flex-col justify-center bg-charcoal p-10">
+            <p className="font-display text-2xl text-white">Need something specific?</p>
+            <p className="mt-3 text-silver">If it can be manufactured in ASEAN, we can source it.</p>
+            <Link
+              href="/contact"
+              className="mt-6 text-xs uppercase tracking-[0.22em] text-white underline underline-offset-8"
+            >
+              Send a brief
+            </Link>
+          </div>
+        </div>
+      </Section>
+
+      {/* Why us */}
+      <Section>
+        <Heading
+          eyebrow="The Khalyven Advantage"
+          title="A Transnational Footprint"
+          text="With foundational roots in the Maldives and a dynamic operational expansion into Malaysia, we hold a rare dual-market advantage: we audit manufacturers, enforce strict quality control and negotiate exclusive pricing at the source, passing that value, speed and reliability on to our Maldivian clientele."
+        />
+        <div className="grid gap-10 md:grid-cols-3">
+          {ADVANTAGES.map((a) => (
+            <div key={a.title} className="border-t border-charcoal pt-8">
+              <a.icon size={30} stroke={1.2} className="text-steel" />
+              <h3 className="font-display mt-6 text-2xl font-semibold">{a.title}</h3>
+              <p className="mt-3 leading-relaxed text-muted">{a.text}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* Process */}
+      <Section className="dark-surface">
+        <Heading dark eyebrow="How We Work" title="From Factory Floor to Island Shore" />
+        <div className="grid gap-10 md:grid-cols-4">
+          {PROCESS.map((p, i) => (
+            <div key={p.title}>
+              <span className="font-display text-6xl silver-text">0{i + 1}</span>
+              <h3 className="mt-4 text-sm uppercase tracking-[0.25em] text-white">{p.title}</h3>
+              <p className="mt-3 leading-relaxed text-silver">{p.text}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* Clients */}
+      <Section>
+        <Heading
+          eyebrow="Who We Serve"
+          title="Strategic Partnerships Across the Maldivian Economy"
+          text="We don't just supply products; we engineer supply-chain solutions for the most demanding sectors in the Maldives."
+        />
+        <div className="grid gap-8 md:grid-cols-2">
+          {CLIENTS.map((c) => (
+            <div key={c.title} className="border border-silver bg-white p-8">
+              <c.icon size={28} stroke={1.2} className="text-steel" />
+              <h3 className="font-display mt-5 text-2xl font-semibold">{c.title}</h3>
+              <p className="mt-1 text-xs uppercase tracking-[0.22em] text-steel">{c.tagline}</p>
+              <p className="mt-4 leading-relaxed text-muted">{c.text}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <CtaBand />
+    </>
   );
 }
