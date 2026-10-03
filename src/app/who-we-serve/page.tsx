@@ -18,7 +18,7 @@ export default function WhoWeServe() {
             <div key={c.title} className="grid gap-8 bg-background py-12 md:grid-cols-3 md:px-6">
               <div>
                 <c.icon size={36} stroke={1} className="text-steel" />
-                <p className="mt-6 text-xs uppercase tracking-[0.3em] text-steel">0{i + 1}</p>
+                <p className="mt-6 text-xs uppercase tracking-[0.3em] text-muted">0{i + 1}</p>
                 <h2 className="font-display mt-2 text-3xl font-semibold">{c.title}</h2>
               </div>
               <div className="md:col-span-2">

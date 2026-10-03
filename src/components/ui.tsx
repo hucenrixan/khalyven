@@ -34,7 +34,7 @@ export function Heading({
     <div className={`mb-14 max-w-3xl ${center ? "mx-auto text-center" : ""}`}>
       {eyebrow && (
         <p
-          className={`mb-4 text-xs uppercase tracking-[0.3em] ${dark ? "text-silver" : "text-steel"}`}
+          className={`mb-4 text-xs uppercase tracking-[0.3em] ${dark ? "text-silver" : "text-muted"}`}
         >
           {eyebrow}
         </p>

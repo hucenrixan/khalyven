@@ -49,13 +49,15 @@ body {
 }
 
 .dark-surface {
-  background:
-    radial-gradient(ellipse at 50% 30%, #2a2d34 0%, #15171b 60%, #0d0e11 100%);
+  background-color: #15171b;
+  background-image: radial-gradient(ellipse at 50% 30%, #2a2d34 0%, #15171b 60%, #0d0e11 100%);
 }
 
+/* Always paired with .dark-surface: grid layers sit above the dark gradient. */
 .pattern-grid {
   background-image:
     linear-gradient(rgba(191, 196, 204, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(191, 196, 204, 0.06) 1px, transparent 1px);
-  background-size: 56px 56px;
+    linear-gradient(90deg, rgba(191, 196, 204, 0.06) 1px, transparent 1px),
+    radial-gradient(ellipse at 50% 30%, #2a2d34 0%, #15171b 60%, #0d0e11 100%);
+  background-size: 56px 56px, 56px 56px, auto;
 }

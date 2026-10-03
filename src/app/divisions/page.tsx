@@ -22,7 +22,7 @@ export default function Divisions() {
           <div className="grid gap-12 md:grid-cols-2">
             <div>
               <d.icon size={44} stroke={1} className="text-steel" />
-              <p className="mt-8 text-xs uppercase tracking-[0.3em] text-steel">
+              <p className="mt-8 text-xs uppercase tracking-[0.3em] text-muted">
                 Division 0{i + 1}
               </p>
               <h2 className="font-display mt-3 text-4xl font-medium md:text-5xl">{d.title}</h2>

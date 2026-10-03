@@ -128,7 +128,7 @@ export default function Home() {
             <div key={c.title} className="border border-silver bg-white p-8">
               <c.icon size={28} stroke={1.2} className="text-steel" />
               <h3 className="font-display mt-5 text-2xl font-semibold">{c.title}</h3>
-              <p className="mt-1 text-xs uppercase tracking-[0.22em] text-steel">{c.tagline}</p>
+              <p className="mt-1 text-xs uppercase tracking-[0.22em] text-muted">{c.tagline}</p>
               <p className="mt-4 leading-relaxed text-muted">{c.text}</p>
             </div>
           ))}

@@ -57,7 +57,7 @@ export default function About() {
 
       <Section>
         <div className="mx-auto max-w-3xl text-center">
-          <p className="mb-4 text-xs uppercase tracking-[0.3em] text-steel">Our Commitment</p>
+          <p className="mb-4 text-xs uppercase tracking-[0.3em] text-muted">Our Commitment</p>
           <h2 className="font-display text-4xl font-medium md:text-5xl">Engineered for the Exceptional</h2>
           <span className="rule mx-auto mt-6" />
           <p className="mt-8 text-lg leading-relaxed text-muted">

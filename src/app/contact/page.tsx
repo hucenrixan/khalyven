@@ -30,12 +30,12 @@ export default function Contact() {
             <div>
               <h3 className="mb-5 text-xs uppercase tracking-[0.25em] text-charcoal">Maldives</h3>
               <p className="flex gap-3 text-muted"><IconMapPin size={20} className="shrink-0 text-steel" />{CONTACT.maldives}</p>
-              <p className="mt-2 pl-8 text-sm text-steel">Registered office</p>
+              <p className="mt-2 pl-8 text-sm text-muted">Registered office</p>
             </div>
             <div>
               <h3 className="mb-5 text-xs uppercase tracking-[0.25em] text-charcoal">Malaysia</h3>
               <p className="flex gap-3 text-muted"><IconMapPin size={20} className="shrink-0 text-steel" />{CONTACT.malaysia}</p>
-              <p className="mt-2 pl-8 text-sm text-steel">Procurement hub</p>
+              <p className="mt-2 pl-8 text-sm text-muted">Procurement hub</p>
             </div>
           </aside>
         </div>
