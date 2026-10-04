@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { IconMail, IconMapPin, IconPhone } from "@tabler/icons-react";
 import QuoteForm from "@/components/QuoteForm";
 import { PageHero, Section } from "@/components/ui";
-import { CONTACT } from "@/lib/content";
+import { getSettings } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Contact Our Procurement Team" };
 
-export default function Contact() {
+export default async function Contact() {
+  const { contact: CONTACT } = await getSettings();
   return (
     <>
       <PageHero

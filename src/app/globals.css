@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f5f7;
-  --foreground: #15171b;
+  --background: #f4f7fa;
+  --foreground: #0d1b2e;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-charcoal: #15171b;
-  --color-charcoal-soft: #23262c;
-  --color-steel: #868d98;
-  --color-silver: #bfc4cc;
-  --color-silver-soft: #e1e4e9;
-  --color-mist: #eceef1;
-  --color-ink: #15171b;
-  --color-muted: #5b6270;
+  --color-charcoal: #06274a;
+  --color-charcoal-soft: #07396b;
+  --color-steel: #0aa4e3;
+  --color-silver: #c3d2e0;
+  --color-silver-soft: #dbe5ee;
+  --color-mist: #e9eff5;
+  --color-ink: #0d1b2e;
+  --color-muted: #566678;
   --font-sans: var(--font-inter);
   --font-serif: var(--font-cormorant);
 }
@@ -35,7 +35,7 @@ body {
 }
 
 .silver-text {
-  background: linear-gradient(180deg, #ffffff 0%, #bfc4cc 55%, #8d949f 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #cdeafa 55%, #7fd0f2 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -49,15 +49,15 @@ body {
 }
 
 .dark-surface {
-  background-color: #15171b;
-  background-image: radial-gradient(ellipse at 50% 30%, #2a2d34 0%, #15171b 60%, #0d0e11 100%);
+  background-color: #06274a;
+  background-image: radial-gradient(ellipse at 50% 30%, #0b4a8a 0%, #06274a 60%, #031528 100%);
 }
 
 /* Always paired with .dark-surface: grid layers sit above the dark gradient. */
 .pattern-grid {
   background-image:
-    linear-gradient(rgba(191, 196, 204, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(191, 196, 204, 0.06) 1px, transparent 1px),
-    radial-gradient(ellipse at 50% 30%, #2a2d34 0%, #15171b 60%, #0d0e11 100%);
+    linear-gradient(rgba(10, 164, 227, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 164, 227, 0.08) 1px, transparent 1px),
+    radial-gradient(ellipse at 50% 30%, #0b4a8a 0%, #06274a 60%, #031528 100%);
   background-size: 56px 56px, 56px 56px, auto;
 }

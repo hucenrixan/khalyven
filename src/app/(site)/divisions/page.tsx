@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { IconCheck } from "@tabler/icons-react";
 import { CtaBand, PageHero, Section } from "@/components/ui";
-import { DIVISIONS } from "@/lib/content";
+import { getDivisions } from "@/lib/data";
 
 export const metadata: Metadata = { title: "Our Divisions" };
 
-export default function Divisions() {
+export default async function Divisions() {
+  const divisions = await getDivisions();
   return (
     <>
       <PageHero
@@ -14,7 +15,7 @@ export default function Divisions() {
         title="Our Divisions"
         text="Five specialist divisions covering the full spectrum of luxury hospitality, development and commercial supply, sourced direct from ASEAN manufacturers."
       />
-      {DIVISIONS.map((d, i) => (
+      {divisions.map((d, i) => (
         <Section
           key={d.slug}
           id={d.slug}
@@ -33,7 +34,7 @@ export default function Divisions() {
             <div className="space-y-6">
               <div className="relative aspect-[16/10] overflow-hidden">
                 <Image
-                  src={`/photos/${d.slug}.jpg`}
+                  src={d.image}
                   alt={d.title}
                   fill
                   sizes="(min-width: 768px) 50vw, 100vw"

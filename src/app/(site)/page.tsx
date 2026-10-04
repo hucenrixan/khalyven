@@ -1,15 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button, CtaBand, Heading, Section } from "@/components/ui";
-import { ADVANTAGES, CLIENTS, DIVISIONS, PROCESS } from "@/lib/content";
+import { ADVANTAGES, CLIENTS, PROCESS } from "@/lib/content";
+import { getDivisions, getSettings } from "@/lib/data";
 
-export default function Home() {
+export default async function Home() {
+  const [divisions, { photos }] = await Promise.all([getDivisions(), getSettings()]);
   return (
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-charcoal px-6 py-32 md:py-48">
         <Image
-          src="/photos/hero.jpg"
+          src={photos.hero}
           alt="Aerial view of overwater villas in the Maldives"
           fill
           priority
@@ -67,7 +69,7 @@ export default function Home() {
           text="Five specialist divisions, one accountable partner."
         />
         <div className="grid gap-px bg-silver md:grid-cols-2 lg:grid-cols-3">
-          {DIVISIONS.map((d) => (
+          {divisions.map((d) => (
             <Link
               key={d.slug}
               href={`/divisions#${d.slug}`}
@@ -105,7 +107,7 @@ export default function Home() {
           </div>
           <div className="relative aspect-[4/3] overflow-hidden">
             <Image
-              src="/photos/source.jpg"
+              src={photos.source}
               alt="Container terminal with cranes and stacked shipping containers"
               fill
               sizes="(min-width: 768px) 50vw, 100vw"

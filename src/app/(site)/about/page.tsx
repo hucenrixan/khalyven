@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { CtaBand, Heading, PageHero, Section } from "@/components/ui";
 import { HUB_POINTS } from "@/lib/content";
+import { getSettings } from "@/lib/data";
 
 export const metadata: Metadata = { title: "About Us" };
 
-export default function About() {
+export default async function About() {
+  const { photos } = await getSettings();
   return (
     <>
       <PageHero
@@ -44,7 +46,7 @@ export default function About() {
         />
         <div className="relative mb-14 aspect-[16/9] overflow-hidden md:aspect-[21/9]">
           <Image
-            src="/photos/malaysia.jpg"
+            src={photos.malaysia}
             alt="Kuala Lumpur skyline at dusk"
             fill
             sizes="(min-width: 1280px) 1216px, 100vw"
