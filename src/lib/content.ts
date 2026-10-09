@@ -22,7 +22,7 @@ export const COMPANY = "Khalyven International";
 export const CONTACT = {
   email: "global.trade@khalyven.com / ahsan@khalyven.com",
   phone: "7878784 / 7524449",
-  maldives: "Malé, Republic of Maldives",
+  maldives: "G. Shabnamee Villa, K. Malé, Republic of Maldives",
   malaysia: "B-G, 08, Jalan SS 7/13b, SS7, 47301 Petaling Jaya, Selangor, Malaysia",
 };
 
