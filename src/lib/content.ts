@@ -20,10 +20,10 @@ export const COMPANY = "Khalyven International";
 
 // TODO: replace with real details once supplied by the client.
 export const CONTACT = {
-  email: "info@khalyven.com",
-  phone: "+960 000 0000",
+  email: "global.trade@khalyven.com / ahsan@khalyven.com",
+  phone: "7878784 / 7524449",
   maldives: "Malé, Republic of Maldives",
-  malaysia: "Kuala Lumpur, Malaysia",
+  malaysia: "B-G, 08, Jalan SS 7/13b, SS7, 47301 Petaling Jaya, Selangor, Malaysia",
 };
 
 export const NAV = [
