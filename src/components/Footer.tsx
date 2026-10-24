@@ -40,7 +40,19 @@ export default async function Footer() {
             </li>
             <li className="flex gap-3">
               <IconPhone size={18} className="mt-0.5 shrink-0 text-silver" />
-              {CONTACT.phone}
+              <span>
+                {CONTACT.phone.split("/").map((n, i) => (
+                  <span key={n}>
+                    {i > 0 && " / "}
+                    <a
+                      href={`tel:${n.replace(/[^\d+]/g, "")}`}
+                      className="transition-colors hover:text-white"
+                    >
+                      {n.trim()}
+                    </a>
+                  </span>
+                ))}
+              </span>
             </li>
             <li className="flex gap-3">
               <IconMapPin size={18} className="mt-0.5 shrink-0 text-silver" />
