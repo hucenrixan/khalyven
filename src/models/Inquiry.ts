@@ -9,6 +9,7 @@ const InquirySchema = new Schema(
     type: { type: String, trim: true },
     division: { type: String, trim: true },
     message: { type: String, required: true, trim: true },
+    notes: { type: String, trim: true },
     status: { type: String, enum: ["new", "contacted", "closed"], default: "new" },
   },
   { timestamps: true }

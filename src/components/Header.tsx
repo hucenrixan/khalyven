@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { IconMenu2, IconX } from "@tabler/icons-react";
+import { IconChevronDown, IconMenu2, IconX } from "@tabler/icons-react";
 import Logo from "./Logo";
-import { NAV } from "@/lib/content";
+import type { NavNode } from "@/lib/data";
 
-export default function Header() {
+export default function Header({ nav }: { nav: NavNode[] }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -19,18 +19,38 @@ export default function Header() {
         </Link>
 
         <nav className="hidden items-center gap-9 md:flex">
-          {NAV.map((n) => {
-            const active = n.href === "/" ? pathname === "/" : pathname.startsWith(n.href);
+          {nav.map((n) => {
+            const active = n.href === "/" ? pathname === "/" : pathname.startsWith(n.href.split("#")[0]);
+            const cls = `text-[13px] uppercase tracking-[0.18em] transition-colors hover:text-white ${
+              active ? "text-white" : "text-silver"
+            }`;
+            if (!n.children.length) {
+              return (
+                <Link key={n.href + n.label} href={n.href} className={cls}>
+                  {n.label}
+                </Link>
+              );
+            }
             return (
-              <Link
-                key={n.href}
-                href={n.href}
-                className={`text-[13px] uppercase tracking-[0.18em] transition-colors hover:text-white ${
-                  active ? "text-white" : "text-silver"
-                }`}
-              >
-                {n.label}
-              </Link>
+              <div key={n.href + n.label} className="group relative">
+                <Link href={n.href} className={`${cls} inline-flex items-center gap-1`}>
+                  {n.label}
+                  <IconChevronDown size={14} />
+                </Link>
+                <div className="invisible absolute left-1/2 top-full w-60 -translate-x-1/2 pt-6 opacity-0 transition-opacity group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+                  <div className="border border-white/10 bg-charcoal py-2 shadow-xl">
+                    {n.children.map((c) => (
+                      <Link
+                        key={c.href + c.label}
+                        href={c.href}
+                        className="block px-5 py-3 text-[12px] uppercase tracking-[0.15em] text-silver transition-colors hover:bg-white/10 hover:text-white"
+                      >
+                        {c.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
             );
           })}
           <Link
@@ -52,15 +72,26 @@ export default function Header() {
 
       {open && (
         <nav className="border-t border-white/10 bg-charcoal px-6 pb-6 md:hidden">
-          {NAV.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              onClick={() => setOpen(false)}
-              className="block border-b border-white/5 py-4 text-sm uppercase tracking-[0.18em] text-silver"
-            >
-              {n.label}
-            </Link>
+          {nav.map((n) => (
+            <div key={n.href + n.label}>
+              <Link
+                href={n.href}
+                onClick={() => setOpen(false)}
+                className="block border-b border-white/5 py-4 text-sm uppercase tracking-[0.18em] text-silver"
+              >
+                {n.label}
+              </Link>
+              {n.children.map((c) => (
+                <Link
+                  key={c.href + c.label}
+                  href={c.href}
+                  onClick={() => setOpen(false)}
+                  className="block border-b border-white/5 py-3 pl-6 text-xs uppercase tracking-[0.15em] text-steel"
+                >
+                  {c.label}
+                </Link>
+              ))}
+            </div>
           ))}
         </nav>
       )}

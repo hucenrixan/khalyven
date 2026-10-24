@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Inquiry from "@/models/Inquiry";
+import { allow, clientIp } from "@/lib/rateLimit";
 
 export async function POST(req: Request) {
+  // 5 submissions per hour per IP.
+  if (!(await allow(`inquiry:${clientIp(req)}`, 5, 60 * 60))) {
+    return NextResponse.json(
+      { error: "Too many messages from your connection. Please try again later." },
+      { status: 429 }
+    );
+  }
   let body: Record<string, unknown>;
   try {
     body = await req.json();

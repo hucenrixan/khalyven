@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { IconMail, IconPhone, IconMapPin } from "@tabler/icons-react";
 import Logo from "./Logo";
-import { NAV, DIVISIONS } from "@/lib/content";
-import { getSettings } from "@/lib/data";
+import { getNav, getSettings } from "@/lib/data";
 
 export default async function Footer() {
-  const { contact: CONTACT } = await getSettings();
+  const [{ contact: CONTACT }, { footer }] = await Promise.all([getSettings(), getNav()]);
   return (
     <footer className="bg-charcoal text-silver">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-4">
@@ -17,31 +16,20 @@ export default async function Footer() {
           </p>
         </div>
 
-        <div>
-          <h4 className="mb-5 text-xs uppercase tracking-[0.25em] text-white">Navigate</h4>
-          <ul className="space-y-3 text-sm">
-            {NAV.map((n) => (
-              <li key={n.href}>
-                <Link href={n.href} className="transition-colors hover:text-white">
-                  {n.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="mb-5 text-xs uppercase tracking-[0.25em] text-white">Divisions</h4>
-          <ul className="space-y-3 text-sm">
-            {DIVISIONS.map((d) => (
-              <li key={d.slug}>
-                <Link href={`/divisions#${d.slug}`} className="transition-colors hover:text-white">
-                  {d.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {footer.map((g) => (
+          <div key={g.title}>
+            <h4 className="mb-5 text-xs uppercase tracking-[0.25em] text-white">{g.title}</h4>
+            <ul className="space-y-3 text-sm">
+              {g.links.map((l) => (
+                <li key={l.href + l.label}>
+                  <Link href={l.href} className="transition-colors hover:text-white">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
 
         <div>
           <h4 className="mb-5 text-xs uppercase tracking-[0.25em] text-white">Contact</h4>

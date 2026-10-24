@@ -2,10 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button, CtaBand, Heading, Section } from "@/components/ui";
 import { ADVANTAGES, CLIENTS, PROCESS } from "@/lib/content";
-import { getDivisions, getSettings } from "@/lib/data";
+import { getDivisions, getSettings, getTestimonials } from "@/lib/data";
 
 export default async function Home() {
-  const [divisions, { photos }] = await Promise.all([getDivisions(), getSettings()]);
+  const [divisions, { photos }, testimonials] = await Promise.all([
+    getDivisions(),
+    getSettings(),
+    getTestimonials(),
+  ]);
   return (
     <>
       {/* Hero */}
@@ -160,6 +164,22 @@ export default async function Home() {
         </div>
       </Section>
 
+      {testimonials.length > 0 && (
+        <Section className="bg-mist">
+          <Heading eyebrow="Testimonials" title="Trusted by the people we supply" center />
+          <div className="grid gap-8 md:grid-cols-3">
+            {testimonials.slice(0, 3).map((t) => (
+              <blockquote key={String(t._id)} className="border border-silver bg-white p-8">
+                <p className="font-display text-xl leading-relaxed text-charcoal">&ldquo;{t.quote}&rdquo;</p>
+                <footer className="mt-6 text-sm text-muted">
+                  <span className="text-charcoal">{t.author}</span>
+                  {(t.role || t.company) && <> · {[t.role, t.company].filter(Boolean).join(", ")}</>}
+                </footer>
+              </blockquote>
+            ))}
+          </div>
+        </Section>
+      )}
       <CtaBand />
     </>
   );

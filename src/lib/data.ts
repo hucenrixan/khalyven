@@ -1,7 +1,8 @@
 import { connectDB } from "./mongodb";
-import { CONTACT, DIVISIONS } from "./content";
+import { CONTACT, DIVISIONS, NAV } from "./content";
 import { DEFAULT_PHOTOS } from "./defaults";
 import { DivisionContent, Settings } from "@/models/SiteContent";
+import { GalleryItem, NavItem, Post, Testimonial } from "@/models/Content";
 
 
 export type SiteSettings = {
@@ -71,4 +72,100 @@ export async function getDivisions(): Promise<DivisionData[]> {
       image: pick(o?.image, `/photos/${d.slug}.jpg`),
     };
   });
+}
+
+/* ---------- Navigation ---------- */
+
+export type NavNode = { id?: string; label: string; href: string; children: NavNode[] };
+export type FooterGroup = { title: string; links: { label: string; href: string }[] };
+
+type NavDoc = {
+  _id: unknown;
+  area: string;
+  group?: string | null;
+  label: string;
+  href: string;
+  parent?: unknown;
+  order?: number | null;
+};
+
+/** Header tree and footer columns; falls back to the defaults in code until menus are edited. */
+export async function getNav(): Promise<{ header: NavNode[]; footer: FooterGroup[] }> {
+  let docs: NavDoc[] = [];
+  try {
+    await connectDB();
+    docs = (await NavItem.find().sort({ order: 1, createdAt: 1 }).lean()) as NavDoc[];
+  } catch {
+    // database unavailable: serve defaults
+  }
+
+  const hdr = docs.filter((d) => d.area === "header");
+  const header: NavNode[] = hdr.length
+    ? hdr
+        .filter((d) => !d.parent)
+        .map((d) => ({
+          id: String(d._id),
+          label: d.label,
+          href: d.href,
+          children: hdr
+            .filter((c) => c.parent && String(c.parent) === String(d._id))
+            .map((c) => ({ id: String(c._id), label: c.label, href: c.href, children: [] })),
+        }))
+    : NAV.map((n) => ({ ...n, children: [] }));
+
+  const ftr = docs.filter((d) => d.area === "footer");
+  let footer: FooterGroup[];
+  if (ftr.length) {
+    footer = [];
+    for (const d of ftr) {
+      const title = d.group || "Navigate";
+      let g = footer.find((x) => x.title === title);
+      if (!g) footer.push((g = { title, links: [] }));
+      g.links.push({ label: d.label, href: d.href });
+    }
+  } else {
+    footer = [
+      { title: "Navigate", links: NAV },
+      { title: "Divisions", links: DIVISIONS.map((d) => ({ label: d.title, href: `/divisions#${d.slug}` })) },
+    ];
+  }
+  return { header, footer };
+}
+
+/* ---------- Testimonials, gallery, news ---------- */
+
+export async function getTestimonials() {
+  try {
+    await connectDB();
+    return await Testimonial.find({ published: true }).sort({ order: 1, createdAt: -1 }).lean();
+  } catch {
+    return [];
+  }
+}
+
+export async function getGallery() {
+  try {
+    await connectDB();
+    return await GalleryItem.find({ published: true }).sort({ order: 1, createdAt: -1 }).lean();
+  } catch {
+    return [];
+  }
+}
+
+export async function getPosts() {
+  try {
+    await connectDB();
+    return await Post.find({ published: true }).sort({ publishedAt: -1 }).lean();
+  } catch {
+    return [];
+  }
+}
+
+export async function getPost(slug: string) {
+  try {
+    await connectDB();
+    return await Post.findOne({ slug, published: true }).lean();
+  } catch {
+    return null;
+  }
 }
