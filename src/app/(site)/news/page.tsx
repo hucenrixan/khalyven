@@ -1,20 +1,19 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { CtaBand, PageHero, Section } from "@/components/ui";
-import { getPosts } from "@/lib/data";
+import { getPage, getPosts, pageMeta } from "@/lib/data";
 
-export const metadata: Metadata = { title: "News" };
+export const generateMetadata = () => pageMeta("news");
 export const dynamic = "force-dynamic";
 
 export default async function News() {
-  const posts = await getPosts();
+  const [posts, { t }] = await Promise.all([getPosts(), getPage("news")]);
   return (
     <>
-      <PageHero eyebrow="Updates" title="News" text="Announcements and insights from Khalyven International." />
+      <PageHero eyebrow={t.heroEyebrow} title={t.heroTitle} text={t.heroText} />
       <Section>
         {posts.length === 0 ? (
-          <p className="text-center text-muted">No articles yet.</p>
+          <p className="text-center text-muted">{t.empty}</p>
         ) : (
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((p) => (

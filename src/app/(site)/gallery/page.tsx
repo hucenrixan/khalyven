@@ -1,19 +1,18 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import { CtaBand, PageHero, Section } from "@/components/ui";
-import { getGallery } from "@/lib/data";
+import { getGallery, getPage, pageMeta } from "@/lib/data";
 
-export const metadata: Metadata = { title: "Gallery" };
+export const generateMetadata = () => pageMeta("gallery");
 export const dynamic = "force-dynamic";
 
 export default async function Gallery() {
-  const items = await getGallery();
+  const [items, { t }] = await Promise.all([getGallery(), getPage("gallery")]);
   return (
     <>
-      <PageHero eyebrow="Our Work" title="Gallery" text="A look at the products and projects we deliver." />
+      <PageHero eyebrow={t.heroEyebrow} title={t.heroTitle} text={t.heroText} />
       <Section>
         {items.length === 0 ? (
-          <p className="text-center text-muted">Photos coming soon.</p>
+          <p className="text-center text-muted">{t.empty}</p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((g) => (
@@ -21,7 +20,7 @@ export default async function Gallery() {
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
                     src={g.image}
-                    alt={g.caption || "Khalyven gallery photo"}
+                    alt={g.caption || t.heroTitle}
                     fill
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     className="object-cover"

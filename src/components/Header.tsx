@@ -7,15 +7,23 @@ import { IconChevronDown, IconMenu2, IconX } from "@tabler/icons-react";
 import Logo from "./Logo";
 import type { NavNode } from "@/lib/data";
 
-export default function Header({ nav }: { nav: NavNode[] }) {
+export default function Header({
+  nav,
+  cta,
+  logo,
+}: {
+  nav: NavNode[];
+  cta: { label: string; href: string };
+  logo: { top: string; bottom: string };
+}) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-charcoal/95 backdrop-blur">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
-        <Link href="/" aria-label="Khalyven International home" onClick={() => setOpen(false)}>
-          <Logo />
+        <Link href="/" aria-label="Home" onClick={() => setOpen(false)}>
+          <Logo top={logo.top} bottom={logo.bottom} />
         </Link>
 
         <nav className="hidden items-center gap-9 md:flex">
@@ -54,10 +62,10 @@ export default function Header({ nav }: { nav: NavNode[] }) {
             );
           })}
           <Link
-            href="/contact"
+            href={cta.href}
             className="border border-silver px-5 py-2.5 text-[12px] uppercase tracking-[0.2em] text-white transition-colors hover:bg-white hover:text-charcoal"
           >
-            Partner With Us
+            {cta.label}
           </Link>
         </nav>
 

@@ -20,7 +20,15 @@ export function LogoMark({
   );
 }
 
-export default function Logo({ light = true }: { light?: boolean }) {
+export default function Logo({
+  light = true,
+  top = "KHALYVEN",
+  bottom = "INTERNATIONAL",
+}: {
+  light?: boolean;
+  top?: string;
+  bottom?: string;
+}) {
   return (
     <span className="flex items-center gap-3">
       <LogoMark dark={!light} />
@@ -30,14 +38,14 @@ export default function Logo({ light = true }: { light?: boolean }) {
             light ? "text-white" : "text-charcoal"
           }`}
         >
-          KHALYVEN
+          {top}
         </span>
         <span
           className={`mt-1.5 text-[8px] font-light tracking-[0.5em] ${
             light ? "text-silver" : "text-muted"
           }`}
         >
-          INTERNATIONAL
+          {bottom}
         </span>
       </span>
     </span>

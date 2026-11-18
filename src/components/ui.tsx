@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { IconArrowRight } from "@tabler/icons-react";
+import { getPage } from "@/lib/data";
 
 export function Section({
   children,
@@ -104,21 +105,19 @@ export function PageHero({
   );
 }
 
-export function CtaBand() {
+export async function CtaBand() {
+  const { t } = await getPage("site");
   return (
     <section className="dark-surface pattern-grid px-6 py-24 text-center">
       <div className="mx-auto max-w-3xl">
         <h2 className="font-display text-4xl font-medium text-white md:text-6xl">
-          Secure Your Supply Chain
+          {t.ctaTitle}
         </h2>
         <span className="rule mx-auto mt-8" />
-        <p className="mt-8 text-lg leading-relaxed text-silver">
-          Discover how Khalyven can elevate your property, project or enterprise with world-class
-          ASEAN procurement.
-        </p>
+        <p className="mt-8 text-lg leading-relaxed text-silver">{t.ctaText}</p>
         <div className="mt-10">
-          <Button href="/contact" variant="outline-light">
-            Contact Our Procurement Team
+          <Button href={t.ctaHref} variant="outline-light">
+            {t.ctaButton}
           </Button>
         </div>
       </div>

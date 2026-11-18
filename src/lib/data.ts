@@ -1,9 +1,11 @@
+import { cache } from "react";
+import type { Metadata } from "next";
 import { connectDB } from "./mongodb";
 import { CONTACT, DIVISIONS, NAV } from "./content";
 import { DEFAULT_PHOTOS } from "./defaults";
-import { DivisionContent, Settings } from "@/models/SiteContent";
+import { pageDef, type ListItem, type PageKey } from "./pages";
+import { DivisionContent, PageContent, Settings } from "@/models/SiteContent";
 import { GalleryItem, NavItem, Post, Testimonial } from "@/models/Content";
-
 
 export type SiteSettings = {
   contact: typeof CONTACT;
@@ -22,9 +24,26 @@ type DivisionDoc = {
   detail?: string | null;
   items?: string[];
   image?: string | null;
+  icon?: string | null;
+  order?: number | null;
+  deleted?: boolean | null;
 };
 
-export type DivisionData = (typeof DIVISIONS)[number] & { image: string };
+export type DivisionData = {
+  slug: string;
+  title: string;
+  summary: string;
+  detail: string;
+  items: string[];
+  icon: string;
+  image: string;
+  order: number;
+  /** Added from the admin panel (not one of the built-in divisions). */
+  custom: boolean;
+};
+
+/** Photo used for a division that has no photo of its own yet. */
+export const DIVISION_PLACEHOLDER = "/photos/source.jpg";
 
 const pick = (v: string | null | undefined, fallback: string) => (v && v.trim() ? v : fallback);
 
@@ -52,8 +71,11 @@ export async function getSettings(): Promise<SiteSettings> {
   };
 }
 
-/** Divisions with any admin edits applied on top of the defaults in code. */
-export async function getDivisions(): Promise<DivisionData[]> {
+/**
+ * Built-in divisions with admin edits applied, minus any the admin removed,
+ * plus divisions added from the admin panel, in the admin's order.
+ */
+export const getDivisions = cache(async (): Promise<DivisionData[]> => {
   let docs: DivisionDoc[] = [];
   try {
     await connectDB();
@@ -61,17 +83,75 @@ export async function getDivisions(): Promise<DivisionData[]> {
   } catch {
     // database unavailable: serve defaults
   }
-  return DIVISIONS.map((d) => {
+  const out: DivisionData[] = [];
+  DIVISIONS.forEach((d, i) => {
     const o = docs.find((x) => x.slug === d.slug);
-    return {
-      ...d,
+    if (o?.deleted) return;
+    out.push({
+      slug: d.slug,
       title: pick(o?.title, d.title),
       summary: pick(o?.summary, d.summary),
       detail: pick(o?.detail, d.detail),
       items: o?.items?.length ? o.items : d.items,
+      icon: pick(o?.icon, d.icon),
       image: pick(o?.image, `/photos/${d.slug}.jpg`),
-    };
+      order: typeof o?.order === "number" ? o.order : i * 10,
+      custom: false,
+    });
   });
+  for (const o of docs) {
+    if (o.deleted || DIVISIONS.some((d) => d.slug === o.slug)) continue;
+    out.push({
+      slug: o.slug,
+      title: pick(o.title, o.slug),
+      summary: o.summary ?? "",
+      detail: o.detail ?? "",
+      items: o.items ?? [],
+      icon: pick(o.icon, "package"),
+      image: pick(o.image, DIVISION_PLACEHOLDER),
+      order: typeof o.order === "number" ? o.order : 1000,
+      custom: true,
+    });
+  }
+  return out.sort((a, b) => a.order - b.order);
+});
+
+/* ---------- Page wording ---------- */
+
+export type PageData = { t: Record<string, string>; lists: Record<string, ListItem[]> };
+
+type PageDoc = { values?: Record<string, unknown>; lists?: Record<string, unknown> } | null;
+
+/** One page's wording: admin overrides on top of the defaults in lib/pages.ts. */
+export const getPage = cache(async (page: PageKey): Promise<PageData> => {
+  let doc: PageDoc = null;
+  try {
+    await connectDB();
+    doc = (await PageContent.findOne({ page }).lean()) as PageDoc;
+  } catch {
+    // database unavailable: serve defaults
+  }
+  const def = pageDef(page);
+  const t: Record<string, string> = {};
+  for (const g of def.groups) {
+    for (const fd of g.fields) {
+      const v = doc?.values?.[fd.key];
+      t[fd.key] = typeof v === "string" && v.trim() ? v : fd.def;
+    }
+  }
+  const lists: Record<string, ListItem[]> = {};
+  for (const l of def.lists ?? []) {
+    const v = doc?.lists?.[l.key];
+    lists[l.key] = Array.isArray(v) && v.length ? (v as ListItem[]) : l.def;
+  }
+  return { t, lists };
+});
+
+/** <title> and description for a public page. */
+export async function pageMeta(page: Exclude<PageKey, "site" | "home">): Promise<Metadata> {
+  const { t } = await getPage(page);
+  // No description key at all when blank, so the site-wide one is inherited.
+  return t.seoDescription ? { title: t.seoTitle, description: t.seoDescription } : { title: t.seoTitle };
 }
 
 /* ---------- Navigation ---------- */
@@ -124,9 +204,10 @@ export async function getNav(): Promise<{ header: NavNode[]; footer: FooterGroup
       g.links.push({ label: d.label, href: d.href });
     }
   } else {
+    const divisions = await getDivisions();
     footer = [
       { title: "Navigate", links: NAV },
-      { title: "Divisions", links: DIVISIONS.map((d) => ({ label: d.title, href: `/divisions#${d.slug}` })) },
+      { title: "Divisions", links: divisions.map((d) => ({ label: d.title, href: `/divisions#${d.slug}` })) },
     ];
   }
   return { header, footer };

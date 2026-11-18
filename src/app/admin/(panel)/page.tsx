@@ -20,11 +20,12 @@ export default async function Dashboard() {
 
   const cards = [
     { href: "/admin/inquiries", title: "Inquiries", text: `${fresh} new · ${total} total` },
+    { href: "/admin/pages", title: "Pages", text: "Rename headings, text, buttons and labels" },
     { href: "/admin/testimonials", title: "Testimonials", text: "Client quotes shown on the home page" },
     { href: "/admin/gallery", title: "Gallery", text: "Project and product photos" },
     { href: "/admin/news", title: "News", text: "Publish articles and updates" },
     { href: "/admin/navigation", title: "Navigation", text: "Header sub-menus and footer links" },
-    { href: "/admin/divisions", title: "Divisions", text: "Edit text, supply lists and photos" },
+    { href: "/admin/divisions", title: "Divisions", text: "Add, remove, reorder and edit divisions" },
     { href: "/admin/settings", title: "Photos & Contact", text: "Site photos and contact details" },
   ];
 

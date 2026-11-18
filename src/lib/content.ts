@@ -1,24 +1,8 @@
-import {
-  IconBed,
-  IconToolsKitchen2,
-  IconBuildingSkyscraper,
-  IconChefHat,
-  IconPackage,
-  IconBuildingStore,
-  IconHome2,
-  IconBuildingCommunity,
-  IconTarget,
-  IconShieldCheck,
-  IconTruckDelivery,
-  IconHammer,
-  IconSearch,
-  IconClipboardCheck,
-  IconWorld,
-} from "@tabler/icons-react";
+// Built-in wording. Everything here can be overridden from the admin panel;
+// these values are what the site shows until an override is saved.
 
 export const COMPANY = "Khalyven International";
 
-// TODO: replace with real details once supplied by the client.
 export const CONTACT = {
   email: "global.trade@khalyven.com / ahsan@khalyven.com",
   phone: "+960 7878784 / +960 7524449",
@@ -38,7 +22,7 @@ export const DIVISIONS = [
   {
     slug: "hospitality",
     title: "Bespoke Resort & Hospitality",
-    icon: IconBed,
+    icon: "bed",
     summary:
       "Unparalleled hotel and resort amenities, from high-thread-count textiles to bespoke in-room accessories and premium guest consumables.",
     detail:
@@ -54,7 +38,7 @@ export const DIVISIONS = [
   {
     slug: "gastronomy",
     title: "Premium Gastronomy & FMCG",
-    icon: IconToolsKitchen2,
+    icon: "kitchen",
     summary:
       "Fine ingredients and fast-moving consumer goods for high-volume, high-expectation environments.",
     detail:
@@ -70,7 +54,7 @@ export const DIVISIONS = [
   {
     slug: "architectural",
     title: "Architectural & Renovation Materials",
-    icon: IconBuildingSkyscraper,
+    icon: "skyscraper",
     summary:
       "Top-tier construction, finishing and renovation materials built for the tropical climate without compromising on aesthetics.",
     detail:
@@ -86,7 +70,7 @@ export const DIVISIONS = [
   {
     slug: "culinary",
     title: "Commercial Culinary Infrastructure",
-    icon: IconChefHat,
+    icon: "chef",
     summary:
       "State-of-the-art commercial kitchen equipment and complete restaurant fit-outs for demanding culinary operations.",
     detail:
@@ -102,7 +86,7 @@ export const DIVISIONS = [
   {
     slug: "packaging",
     title: "Elevated Packaging Solutions",
-    icon: IconPackage,
+    icon: "package",
     summary:
       "Sophisticated, sustainable and custom-branded packaging that protects your products and reflects your brand.",
     detail:
@@ -119,17 +103,17 @@ export const DIVISIONS = [
 
 export const ADVANTAGES = [
   {
-    icon: IconTarget,
+    icon: "target",
     title: "Direct Source Procurement",
     text: "We remove the middleman, negotiating directly with manufacturers for superior quality and cost-efficiency.",
   },
   {
-    icon: IconShieldCheck,
+    icon: "shield",
     title: "Uncompromising Quality Assurance",
     text: "Every shipment is vetted to meet luxury standards before it leaves the factory floor.",
   },
   {
-    icon: IconTruckDelivery,
+    icon: "truck",
     title: "Logistical Mastery",
     text: "We navigate the complexities of ASEAN-to-Maldives freight and customs from origin to island.",
   },
@@ -137,22 +121,22 @@ export const ADVANTAGES = [
 
 export const HUB_POINTS = [
   {
-    icon: IconTarget,
+    icon: "target",
     title: "Direct-to-Source Economics",
     text: "By bypassing third-party distributors and negotiating directly with manufacturers in Malaysia and across ASEAN, we secure exclusive pricing and scale advantages for our Maldivian partners.",
   },
   {
-    icon: IconSearch,
+    icon: "search",
     title: "On-the-Ground Quality Control",
     text: "We don't just order; we inspect. Our presence at the source lets us audit factories, verify materials and ensure every container meets the exacting standards of luxury hospitality and high-end construction.",
   },
   {
-    icon: IconHammer,
+    icon: "hammer",
     title: "Bespoke Curation",
     text: "Custom-milled architectural materials, specialised kitchen outfitting or bespoke resort amenities: our team sources, develops and customises products directly at the manufacturing level.",
   },
   {
-    icon: IconWorld,
+    icon: "world",
     title: "Logistical Precision",
     text: "From the factory floor in Southeast Asia to your project site or resort dock in the Maldives, we oversee a seamless, end-to-end journey.",
   },
@@ -160,25 +144,25 @@ export const HUB_POINTS = [
 
 export const CLIENTS = [
   {
-    icon: IconBuildingCommunity,
+    icon: "community",
     title: "Luxury Hotels & Resorts",
     tagline: "Elevating the Guest Experience",
     text: "In ultra-luxury hospitality, consistency is everything. We partner with general managers and procurement directors to ensure an uninterrupted flow of premium amenities, high-end textiles and exquisite guest consumables, safeguarding your property's five-star reputation.",
   },
   {
-    icon: IconHome2,
+    icon: "home",
     title: "Real Estate Developers",
     tagline: "Building the Future of Island Luxury",
     text: "For developers shaping the next generation of private islands and luxury residences, delays are costly. We provide direct access to elite Southeast Asian manufacturers for high-grade construction materials, luxury finishings and custom architectural elements, delivered on time and to the highest aesthetic standards.",
   },
   {
-    icon: IconChefHat,
+    icon: "chef",
     title: "Restaurants & Culinary Groups",
     tagline: "Empowering Culinary Excellence",
     text: "From standalone fine-dining establishments to expansive resort restaurant portfolios, we equip culinary innovators with commercial kitchen infrastructure and a curated selection of premium food and beverage imports, so chefs can execute their vision without supply limitations.",
   },
   {
-    icon: IconBuildingStore,
+    icon: "store",
     title: "Premium Wholesalers & Distributors",
     tagline: "Strengthening the Supply Chain",
     text: "We are the conduit for Maldivian wholesalers looking to upgrade their portfolios. Through our on-the-ground presence in Malaysia we secure distribution rights and competitive pricing on premium ASEAN goods, allowing you to supply the local market with reliability and scale.",
@@ -187,22 +171,22 @@ export const CLIENTS = [
 
 export const PROCESS = [
   {
-    icon: IconClipboardCheck,
+    icon: "clipboard",
     title: "Brief",
     text: "You share your requirements, volumes, specifications and timeline with our procurement team.",
   },
   {
-    icon: IconSearch,
+    icon: "search",
     title: "Source",
     text: "We shortlist and audit qualified manufacturers and negotiate directly at the source.",
   },
   {
-    icon: IconShieldCheck,
+    icon: "shield",
     title: "Inspect",
     text: "Samples, materials and production are checked on the ground before anything ships.",
   },
   {
-    icon: IconTruckDelivery,
+    icon: "truck",
     title: "Deliver",
     text: "We coordinate freight, customs and final delivery to your project site or resort dock.",
   },

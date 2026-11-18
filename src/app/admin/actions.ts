@@ -1,14 +1,18 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 import { auth, getRole, signIn, signOut } from "@/auth";
 import { hashPassword } from "@/lib/password";
 import { AdminUser, GalleryItem, NavItem, Post, Testimonial } from "@/models/Content";
 import { connectDB } from "@/lib/mongodb";
 import Inquiry from "@/models/Inquiry";
-import { DivisionContent, Settings } from "@/models/SiteContent";
+import { DivisionContent, PageContent, Settings } from "@/models/SiteContent";
 import { DIVISIONS, NAV } from "@/lib/content";
+import { getDivisions } from "@/lib/data";
+import { isIcon } from "@/lib/icons";
+import { isPageKey, pageDef, type ListItem } from "@/lib/pages";
 
 export type FormState = { ok?: boolean; error?: string } | undefined;
 
@@ -41,11 +45,11 @@ export async function logout() {
   await signOut({ redirectTo: "/admin/login" });
 }
 
+const isBuiltIn = (slug: string) => DIVISIONS.some((d) => d.slug === slug);
+
+/** Saves a division. With no slug it creates a new one from the title. */
 export async function saveDivision(_: FormState, fd: FormData): Promise<FormState> {
   await requireAdmin();
-  const slug = text(fd, "slug", 40);
-  if (!DIVISIONS.some((d) => d.slug === slug)) return { error: "Unknown division." };
-
   const title = text(fd, "title", 160);
   if (!title) return { error: "Title is required." };
   const items = text(fd, "items")
@@ -53,8 +57,21 @@ export async function saveDivision(_: FormState, fd: FormData): Promise<FormStat
     .map((s) => s.trim())
     .filter(Boolean)
     .slice(0, 20);
+  const icon = text(fd, "icon", 30);
 
   await connectDB();
+  let slug = text(fd, "slug", 80);
+  const creating = !slug;
+  if (creating) {
+    slug = slugify(title);
+    if (!slug || slug === "new") return { error: "Please choose a different title." };
+    if (isBuiltIn(slug) || (await DivisionContent.exists({ slug }))) {
+      return { error: "A division with a very similar name already exists." };
+    }
+  } else if (!isBuiltIn(slug) && !(await DivisionContent.exists({ slug, deleted: { $ne: true } }))) {
+    return { error: "Unknown division." };
+  }
+
   await DivisionContent.findOneAndUpdate(
     { slug },
     {
@@ -64,11 +81,99 @@ export async function saveDivision(_: FormState, fd: FormData): Promise<FormStat
       detail: text(fd, "detail", 1500),
       items,
       image: imageUrl(fd, "image"),
+      icon: isIcon(icon) ? icon : "",
+      order: num(fd, "order"),
+      deleted: false,
     },
     { upsert: true }
   );
   revalidatePath("/", "layout");
+  if (creating) redirect("/admin/divisions");
   return { ok: true };
+}
+
+/** Removes a division from the site. Built-in ones are hidden and can be restored. */
+export async function deleteDivision(fd: FormData) {
+  await requireAdmin();
+  const slug = text(fd, "slug", 80);
+  if (!slug) return;
+  await connectDB();
+  if (isBuiltIn(slug)) {
+    await DivisionContent.findOneAndUpdate({ slug }, { slug, deleted: true }, { upsert: true });
+  } else {
+    await DivisionContent.deleteOne({ slug });
+  }
+  revalidatePath("/", "layout");
+  redirect("/admin/divisions");
+}
+
+export async function restoreDivisions() {
+  await requireAdmin();
+  await connectDB();
+  await DivisionContent.updateMany({ deleted: true }, { deleted: false });
+  revalidatePath("/", "layout");
+}
+
+/* ---------- Page wording ---------- */
+
+const clean = (v: unknown, max: number) =>
+  String(v ?? "").replace(/\r\n/g, "\n").trim().slice(0, max);
+
+export async function savePage(_: FormState, fd: FormData): Promise<FormState> {
+  await requireAdmin();
+  const page = text(fd, "page", 30);
+  if (!isPageKey(page)) return { error: "Unknown page." };
+  const def = pageDef(page);
+
+  // Only real changes are stored, so untouched fields keep following the built-in text.
+  const values: Record<string, string> = {};
+  for (const g of def.groups) {
+    for (const f of g.fields) {
+      let v = clean(fd.get(f.key), f.long ? 4000 : 300);
+      if (f.link && v) {
+        v = link(v);
+        if (!v) return { error: `"${f.label}" must be a link such as /contact or https://…` };
+      }
+      if (v && v !== f.def) values[f.key] = v;
+    }
+  }
+
+  const lists: Record<string, ListItem[]> = {};
+  for (const l of def.lists ?? []) {
+    let raw: unknown;
+    try {
+      raw = JSON.parse(String(fd.get(`list:${l.key}`) ?? "[]"));
+    } catch {
+      return { error: "Could not read the list. Please reload and try again." };
+    }
+    if (!Array.isArray(raw)) continue;
+    const rows: ListItem[] = [];
+    for (const r of raw.slice(0, 12)) {
+      const o = (r ?? {}) as Record<string, unknown>;
+      const row: ListItem = { title: clean(o.title, 160) };
+      if (!row.title) continue;
+      if (l.columns.includes("icon")) row.icon = isIcon(o.icon) ? o.icon : "package";
+      if (l.columns.includes("tagline")) row.tagline = clean(o.tagline, 200);
+      if (l.columns.includes("text")) row.text = clean(o.text, 1500);
+      rows.push(row);
+    }
+    if (rows.length && JSON.stringify(rows) !== JSON.stringify(l.def)) lists[l.key] = rows;
+  }
+
+  await connectDB();
+  await PageContent.findOneAndUpdate({ page }, { page, values, lists }, { upsert: true });
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+/** Puts a page back to its built-in wording. */
+export async function resetPage(fd: FormData) {
+  await requireAdmin();
+  const page = text(fd, "page", 30);
+  if (!isPageKey(page)) return;
+  await connectDB();
+  await PageContent.deleteOne({ page });
+  revalidatePath("/", "layout");
 }
 
 export async function saveSettings(_: FormState, fd: FormData): Promise<FormState> {
@@ -314,7 +419,7 @@ export async function seedNav(fd: FormData) {
   } else {
     await NavItem.insertMany([
       ...NAV.map((n, i) => ({ area, group: "Navigate", label: n.label, href: n.href, order: i })),
-      ...DIVISIONS.map((d, i) => ({
+      ...(await getDivisions()).map((d, i) => ({
         area,
         group: "Divisions",
         label: d.title,

@@ -1,13 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { DIVISIONS, INQUIRY_TYPES } from "@/lib/content";
 
 const field =
   "w-full border border-silver bg-white px-4 py-3.5 text-[15px] text-charcoal outline-none transition-colors placeholder:text-steel focus:border-charcoal";
 const label = "mb-2 block text-[11px] uppercase tracking-[0.22em] text-muted";
 
-export default function QuoteForm() {
+export default function QuoteForm({
+  t,
+  types,
+  divisions,
+}: {
+  /** Wording from Admin → Pages → Contact. */
+  t: Record<string, string>;
+  types: string[];
+  divisions: string[];
+}) {
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -35,15 +43,13 @@ export default function QuoteForm() {
   if (status === "done") {
     return (
       <div className="border border-silver bg-white p-10 text-center">
-        <h3 className="font-display text-3xl text-charcoal">Thank you.</h3>
-        <p className="mt-4 text-muted">
-          Your inquiry has reached our procurement team. We will respond shortly.
-        </p>
+        <h3 className="font-display text-3xl text-charcoal">{t.thanksTitle}</h3>
+        <p className="mt-4 text-muted">{t.thanksText}</p>
         <button
           onClick={() => setStatus("idle")}
           className="mt-6 text-xs uppercase tracking-[0.22em] text-charcoal underline underline-offset-4"
         >
-          Send another inquiry
+          {t.thanksAgain}
         </button>
       </div>
     );
@@ -53,38 +59,38 @@ export default function QuoteForm() {
     <form onSubmit={onSubmit} className="space-y-6">
       <div className="grid gap-6 md:grid-cols-2">
         <div>
-          <label className={label} htmlFor="name">Full name *</label>
+          <label className={label} htmlFor="name">{t.fName} *</label>
           <input id="name" name="name" required className={field} />
         </div>
         <div>
-          <label className={label} htmlFor="company">Company / Property</label>
+          <label className={label} htmlFor="company">{t.fCompany}</label>
           <input id="company" name="company" className={field} />
         </div>
         <div>
-          <label className={label} htmlFor="email">Email *</label>
+          <label className={label} htmlFor="email">{t.fEmail} *</label>
           <input id="email" name="email" type="email" required className={field} />
         </div>
         <div>
-          <label className={label} htmlFor="phone">Phone / WhatsApp</label>
+          <label className={label} htmlFor="phone">{t.fPhone}</label>
           <input id="phone" name="phone" className={field} />
         </div>
         <div>
-          <label className={label} htmlFor="type">I am a</label>
+          <label className={label} htmlFor="type">{t.fType}</label>
           <select id="type" name="type" className={field} defaultValue="">
-            <option value="" disabled>Select</option>
-            {INQUIRY_TYPES.map((t) => <option key={t}>{t}</option>)}
+            <option value="" disabled>{t.fSelect}</option>
+            {types.map((x) => <option key={x}>{x}</option>)}
           </select>
         </div>
         <div>
-          <label className={label} htmlFor="division">Division of interest</label>
+          <label className={label} htmlFor="division">{t.fDivision}</label>
           <select id="division" name="division" className={field} defaultValue="">
-            <option value="" disabled>Select</option>
-            {DIVISIONS.map((d) => <option key={d.slug}>{d.title}</option>)}
+            <option value="" disabled>{t.fSelect}</option>
+            {divisions.map((x) => <option key={x}>{x}</option>)}
           </select>
         </div>
       </div>
       <div>
-        <label className={label} htmlFor="message">Tell us what you need *</label>
+        <label className={label} htmlFor="message">{t.fMessage} *</label>
         <textarea id="message" name="message" required rows={6} className={field} />
       </div>
       {/* honeypot */}
@@ -95,7 +101,7 @@ export default function QuoteForm() {
         disabled={status === "sending"}
         className="bg-charcoal px-10 py-4 text-[12px] uppercase tracking-[0.22em] text-white transition-colors hover:bg-charcoal-soft disabled:opacity-60"
       >
-        {status === "sending" ? "Sending…" : "Submit Inquiry"}
+        {status === "sending" ? "Sending…" : t.fSubmit}
       </button>
     </form>
   );

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CtaBand, Section } from "@/components/ui";
-import { getPost } from "@/lib/data";
+import { getPage, getPost } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
@@ -13,14 +13,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function Article({ params }: { params: Promise<{ slug: string }> }) {
-  const post = await getPost((await params).slug);
+  const [post, { t }] = await Promise.all([getPost((await params).slug), getPage("news")]);
   if (!post) notFound();
   return (
     <>
       <Section>
         <article className="mx-auto max-w-3xl">
           <Link href="/news" className="text-sm text-muted underline underline-offset-4">
-            ← All news
+            ← {t.back}
           </Link>
           <p className="mt-8 text-xs uppercase tracking-[0.25em] text-muted">
             {post.publishedAt && new Date(post.publishedAt).toLocaleDateString("en-GB", { dateStyle: "long" })}

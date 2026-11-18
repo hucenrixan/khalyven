@@ -1,20 +1,16 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import { IconCheck } from "@tabler/icons-react";
 import { CtaBand, PageHero, Section } from "@/components/ui";
-import { getDivisions } from "@/lib/data";
+import { getDivisions, getPage, pageMeta } from "@/lib/data";
+import { SiteIcon } from "@/lib/icons";
 
-export const metadata: Metadata = { title: "Our Divisions" };
+export const generateMetadata = () => pageMeta("divisions");
 
 export default async function Divisions() {
-  const divisions = await getDivisions();
+  const [divisions, { t }] = await Promise.all([getDivisions(), getPage("divisions")]);
   return (
     <>
-      <PageHero
-        eyebrow="Areas of Expertise"
-        title="Our Divisions"
-        text="Five specialist divisions covering the full spectrum of luxury hospitality, development and commercial supply, sourced direct from ASEAN manufacturers."
-      />
+      <PageHero eyebrow={t.heroEyebrow} title={t.heroTitle} text={t.heroText} />
       {divisions.map((d, i) => (
         <Section
           key={d.slug}
@@ -23,9 +19,9 @@ export default async function Divisions() {
         >
           <div className="grid gap-12 md:grid-cols-2">
             <div>
-              <d.icon size={44} stroke={1} className="text-steel" />
+              <SiteIcon name={d.icon} size={44} stroke={1} className="text-steel" />
               <p className="mt-8 text-xs uppercase tracking-[0.3em] text-muted">
-                Division 0{i + 1}
+                {t.numberLabel} {String(i + 1).padStart(2, "0")}
               </p>
               <h2 className="font-display mt-3 text-4xl font-medium md:text-5xl">{d.title}</h2>
               <span className="rule mt-6" />
@@ -43,7 +39,7 @@ export default async function Divisions() {
               </div>
               <div className="border border-silver bg-white p-10">
                 <h3 className="mb-6 text-xs uppercase tracking-[0.25em] text-charcoal">
-                  What we supply
+                  {t.itemsHeading}
                 </h3>
                 <ul className="space-y-4">
                   {d.items.map((it) => (

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
+import { getPage } from "@/lib/data";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
@@ -9,14 +10,13 @@ const cormorant = Cormorant_Garamond({
   weight: ["400", "500", "600", "700"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "Khalyven International | Strategic Procurement for the Maldives",
-    template: "%s | Khalyven International",
-  },
-  description:
-    "Khalyven International is a premium procurement and supply partner connecting ASEAN manufacturers with Maldivian resorts, developers, restaurants and distributors.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getPage("site");
+  return {
+    title: { default: t.seoTitle, template: `%s | ${t.seoBrand}` },
+    description: t.seoDescription,
+  };
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
